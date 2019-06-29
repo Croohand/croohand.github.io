@@ -1,4 +1,4 @@
-/* @pjs preload="sketch_170517a/data/tp.jpg,sketch_170517a/data/drob.png"; */
+/* @pjs preload="TP/data/tp.jpg,TP/data/drob.png"; */
 int catsNumber = 40;
 
 PImage timg;
@@ -26,9 +26,9 @@ Star createStar(int mode, int delay, int h) {
 void setup() {
   size(900, 600);
   lastTime = millis();
-  timg = loadImage("sketch_170517a/data/tp.jpg");
+  timg = loadImage("TP/data/tp.jpg");
   timg.resize(width, height);
-  star = loadImage("sketch_170517a/data/drob.png");
+  star = loadImage("TP/data/drob.png");
   star.resize(60, 80);
   img = createImage(width, height, RGB);
   for (int i = 0; i < width; ++i)
