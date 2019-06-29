@@ -5,7 +5,7 @@ ArrayList<Figure> figures;
 void setup() {
   size(600, 600);
   figures = new ArrayList<Figure>();
-  for (int i = 0; i < 50; ++i)
+  for (int i = 0; i < 300; ++i)
     figures.add(new Figure(new PVector(random(0, width), random(0, height))));
 }
 
