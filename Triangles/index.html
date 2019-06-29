@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Triangles</title>
+        <script src='../common/processing-1.3.6.min.js'></script>
+        <script src='../common/CCapture.js'></script>
+        <script src='../common/webm-writer-0.2.0.js'></script>
+        <script src='../common/download.js'></script>
+        <script src='../common/gif.js'></script>
+        <script src='../common/tar.js'></script>
+        <script src='../common/Whammy.js'></script>
+    </head>
+
+    <body>
+        <canvas id='sketch' data-processing-sources='Triangles.pde Figure.pde Triangle.pde'></canvas>
+        <button onclick='startRecord();'>Start</button>
+        <button onclick='stopRecord();'>Stop</button>
+        <button onclick='saveRecord();'>Save</button>
+        <script type='application/javascript'>
+            var processingInstance;
+            var capturer;
+            var canvas;
+            var recording = false;
+
+            window.onload = function() {
+                canvas = document.getElementById('sketch');
+                setInterval(render, 20);
+            }
+
+            function startRecord() {
+                if (recording) {
+                    return;
+                }
+                capturer = new CCapture( { format: 'gif', workersPath: 'common/' } );
+                capturer.start();
+                recording = true;
+            }
+
+            function stopRecord() {
+                if (!recording) {
+                    return;
+                }
+                capturer.stop();
+                recording = false;
+            }
+
+            function saveRecord() {
+                if (!capturer) {
+                    return;
+                }
+                capturer.save();
+            }
+
+            function render() {
+                if (!processingInstance) {
+                    processingInstance = Processing.getInstanceById('sketch');
+                    if (!processingInstance) {
+                        return;
+                    }
+                    processingInstance.noLoop();
+                }
+                processingInstance.redraw();
+                if (recording) {
+                    capturer.capture(canvas);
+                }
+            }
+        </script>
+    </body>
+</html>
