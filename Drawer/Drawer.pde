@@ -9,6 +9,8 @@ float hue = 0;
 int showCenterMode = 0;
 int showOptsMode = 1;
 float particleDelay = 0.025;
+int opacity = 100;
+int update = 1;
 
 void setup() {
   prevTime = millis();
@@ -18,9 +20,12 @@ void setup() {
 
 void draw() {
   timeDelta = .016666667;
-  //fill(0, 0, 0, 20);
-  //rect(0, 0, width, height);
-  background(0);
+  if (opacity < 95) {
+      fill(0, 0, 0, opacity);
+      rect(0, 0, width, height);
+  } else {
+      background(0);
+  }
   hue += timeDelta * 50;
   if (hue >= 256) {
     hue -= 256;
@@ -59,12 +64,21 @@ void draw() {
     }
     text(txt, 5, 60);
     text("delay: " + nf(particleDelay, 1, 3), 5, 75);
+    text("opacity: " + opacity + "%", 5, 90);
+    if (update == 0) {
+      txt = "update: false";
+    } else {
+      txt = "update: true";
+    }
+    text(txt, 5, 105);
   }
   if (showCenterMode == 1) {
     ellipse(width / 2, height / 2, 10, 10);
   }
   for (SpawnCluster cluster : spawnClusters) {
-      cluster.update();
+      if (update == 1) {
+          cluster.update();
+      }
       cluster.show();
   }
 }
@@ -115,6 +129,9 @@ void keyPressed() {
   if (key == ' ') {
     showOptsMode = (showOptsMode + 1) % 2;
   }
+  if (key == 'p') {
+      update = (update + 1) % 2;
+  }
   if (key == 'a') {
     particleDelay += 0.001;
   }
@@ -125,12 +142,15 @@ void keyPressed() {
     }
   }
   if (key == 'd') {
-    particleDelay += 0.005;
+    opacity += 1;
+    if (opacity > 100) {
+        opacity = 100;
+    }
   }
   if (key == 'f') {
-    particleDelay -= 0.005;
-    if (particleDelay < 0) {
-      particleDelay = 0;
+    opacity -= 1;
+    if (opacity < 0) {
+      opacity = 0;
     }
   }
 }
