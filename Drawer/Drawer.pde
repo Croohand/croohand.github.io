@@ -39,8 +39,10 @@ void draw() {
       txt = "draw: hor";
     } else if (mode == 2) {
       txt = "draw: diag";
-    } else {
+    } else if (mode == 3) {
       txt = "draw: quad";
+    } else {
+      txt = "draw: simple";
     }
     text(txt, 5, 15);
     if (moveMode == 0) {
@@ -115,7 +117,7 @@ void keyPressed() {
     }
   }
   if (key == 'z') {
-    mode = (mode + 1) % 4;
+    mode = (mode + 1) % 5;
   }
   if (key == 'x') {
     moveMode = (moveMode + 1) % 3;
