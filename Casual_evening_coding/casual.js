@@ -12,7 +12,7 @@ let freeEnts = 0;
 function setup() {
   frameRate(FRAME_RATE);
 
-  canvas = createCanvas(window.innerWidth, window.innerHeight);
+  canvas = createCanvas(windowWidth, windowHeight);
   fullscreen(FULL_SCREEN);
 
   setHSB();
@@ -74,10 +74,6 @@ function fit(value, lower, upper) {
   return value;
 }
 
-window.onresize = function() {
-  var w = window.innerWidth;
-  var h = window.innerHeight;
-  canvas.size(w, h);
-  width = w;
-  height = h;
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
