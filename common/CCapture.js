@@ -917,14 +917,14 @@ function CCapture( settings ) {
 	}
 
 	function _save( callback ) {
-
-		if( !callback ) {
-			callback = function( blob ) {
-				download( blob, _encoder.filename + _encoder.extension, _encoder.mimeType );
-				return false;
-			}
-		}
-		_encoder.save( callback );
+        var cb = function( blob ) {
+            if ( callback ) {
+                callback( blob );
+            }
+            download( blob, _encoder.filename + _encoder.extension, _encoder.mimeType );
+            return false;
+        }
+		_encoder.save( cb );
 
 	}
 

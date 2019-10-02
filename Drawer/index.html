@@ -13,17 +13,19 @@
 
     <body>
         <canvas id='sketch' data-processing-sources='Drawer.pde Spawn.pde SpawnCluster.pde Particle.pde'></canvas>
-        <button onclick='startRecord();'>Record GIF</button>
+        <button id='recordButton' onclick='startRecord();'>Record GIF</button>
         <button onclick='showHotkeys();'>Hotkeys</button>
         <script type='application/javascript'>
             var processingInstance;
             var capturer;
             var canvas;
-            var recording = false;
-            var recordedFrames;
+            var capturing = false;
+            var capturedFrames;
+            var recordButton;
 
             window.onload = function() {
                 canvas = document.getElementById('sketch');
+                recordButton = document.getElementById('recordButton')
                 setInterval(render, 20);
                 showHotkeys();
             }
@@ -32,29 +34,45 @@
                 alert('Hotkeys:\nz -- change symmetry mode\nx -- change particle move mode ("both" recommended)\nc -- change symmetry center mode\nv -- show screen center\nq -- delete last figure\nk -- delete all figures\na -- increase particle delay by 0.001\ns -- decrease particle delay by 0.001\nd -- increase opacity by 1\nf -- decrease opacity by 1\np -- pause update\nspacebar -- hide params');
             }
 
+            function updateRecordButton(action, progress) {
+                recordButton.innerText = `${action}... ${(progress*100).toFixed(2)}%`;
+            }
+
             function startRecord() {
-                recordedFrames = 0;
-                if (recording) {
+                if (capturing) {
                     return;
                 }
-                capturer = new CCapture( { format: 'gif', workersPath: '../common/' } );
+                capturedFrames = 0;
+                capturer = new CCapture({
+                    framerate: 60,
+                    format: 'gif',
+                    workersPath: '../common/',
+                    onProgress: function(progress) {
+                        updateRecordButton('Processing', progress);
+                    }
+                });
                 capturer.start();
-                recording = true;
+                capturing = true;
+                recordButton.disabled = true;
+                updateRecordButton('Capturing', 0);
             }
 
             function stopRecord() {
-                if (!recording) {
+                if (!capturing) {
                     return;
                 }
                 capturer.stop();
-                recording = false;
             }
 
             function saveRecord() {
                 if (!capturer) {
                     return;
                 }
-                capturer.save();
+                capturing = false;
+                capturer.save(function (blob) {
+                    recordButton.disabled = false;
+                    recordButton.innerText = 'Record GIF';
+                });
             }
 
             function render() {
@@ -66,10 +84,11 @@
                     processingInstance.noLoop();
                 }
                 processingInstance.redraw();
-                if (recording) {
+                if (capturing) {
                     capturer.capture(canvas);
-                    recordedFrames++;
-                    if (recordedFrames === 480) {
+                    capturedFrames++;
+                    updateRecordButton('Capturing', capturedFrames / 480);
+                    if (capturedFrames === 480) {
                         stopRecord();
                         saveRecord();
                     }
