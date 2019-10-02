@@ -26,7 +26,7 @@ void draw() {
   } else {
       background(0);
   }
-  hue += timeDelta * 50;
+  hue += timeDelta * 32;
   if (hue >= 256) {
     hue -= 256;
   }

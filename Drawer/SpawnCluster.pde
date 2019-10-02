@@ -7,10 +7,10 @@ class SpawnCluster {
   float delay;
   int mode;
   boolean started = false;
-  
+
   SpawnCluster(int mode) {
     this.centerx = pmouseX;
-    this.centery = pmouseY;    
+    this.centery = pmouseY;
     if (centerMode == 1) {
       this.centerx = width / 2.0;
       this.centery = height / 2.0;
@@ -21,7 +21,7 @@ class SpawnCluster {
     this.mode = mode;
     this.delay = 10000000;
   }
-  
+
   void addSpawn() {
     float px = pmouseX;
     float py = pmouseY;
@@ -36,9 +36,9 @@ class SpawnCluster {
       spawns.add(new Spawn(new PVector(2 * centerx - px, 2 * centery - py)));
     }
   }
-  
+
   void update() {
-    this.hue += timeDelta * 50;
+    this.hue += timeDelta * 32;
     if (this.hue >= 256) {
       this.hue -= 256;
     }
@@ -65,7 +65,7 @@ class SpawnCluster {
       spawns.clear();
     }
   }
-  
+
   void show() {
     for (Spawn spawn : this.spawns) {
       if (!this.started) {
@@ -76,22 +76,27 @@ class SpawnCluster {
       particle.show(this.hue);
     }
   }
-  
+
   float calcSpeed() {
     return 1 / pow(this.spawns.size(), 0.25);
   }
-  
+
   float calcTtl() {
-    return 1 / this.calcSpeed() / 8;
+    float neededTtl = 1 / this.calcSpeed() / 8;
+    float res = 4;
+    while (res > neededTtl) {
+        res /= 2f;
+    }
+    return res;
   }
-  
+
   PVector getLastPos() {
     if (spawns.size() < 4) {
       return new PVector(-100, -100);
     }
     return spawns.get(spawns.size() - 4).pos;
   }
-  
+
   void start() {
     float miny = 1000000;
     float maxy = 0;
@@ -105,7 +110,7 @@ class SpawnCluster {
     }
     this.centery = (miny + maxy) / 2.0;
     this.centerx = (minx + maxx) / 2.0;
-    
+
     this.delay = 0;
     started = true;
   }

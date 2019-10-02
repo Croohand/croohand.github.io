@@ -13,15 +13,14 @@
 
     <body>
         <canvas id='sketch' data-processing-sources='Drawer.pde Spawn.pde SpawnCluster.pde Particle.pde'></canvas>
-        <button onclick='startRecord();'>Start</button>
-        <button onclick='stopRecord();'>Stop</button>
-        <button onclick='saveRecord();'>Save</button>
+        <button onclick='startRecord();'>Record GIF</button>
         <button onclick='showHotkeys();'>Hotkeys</button>
         <script type='application/javascript'>
             var processingInstance;
             var capturer;
             var canvas;
             var recording = false;
+            var recordedFrames;
 
             window.onload = function() {
                 canvas = document.getElementById('sketch');
@@ -34,6 +33,7 @@
             }
 
             function startRecord() {
+                recordedFrames = 0;
                 if (recording) {
                     return;
                 }
@@ -68,6 +68,11 @@
                 processingInstance.redraw();
                 if (recording) {
                     capturer.capture(canvas);
+                    recordedFrames++;
+                    if (recordedFrames === 480) {
+                        stopRecord();
+                        saveRecord();
+                    }
                 }
             }
         </script>

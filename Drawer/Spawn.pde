@@ -1,10 +1,10 @@
 class Spawn {
   PVector pos;
-  
+
   Spawn(PVector pos) {
     this.pos = new PVector(pos.x, pos.y);
   }
-  
+
   void show(float hue) {
     fill(hue, 255, 255);
     noStroke();
