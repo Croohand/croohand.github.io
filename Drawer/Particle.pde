@@ -30,18 +30,10 @@ class Particle {
     }
     this.pos.add(PVector.mult(this.vel, timeDelta * this.speed * 1000));
     //this.radius += timeDelta * 5 * this.speed;
-    if (this.ttl > 0) {
-      this.ttl -= timeDelta;
-      if (this.ttl <= 0) {
-        this.speed *= -1;
-        this.ttl -= maxttl;
-      }  
-    } else {
-      this.ttl += timeDelta;
-      if (this.ttl > 0) {
-        this.speed *= -1;
+    this.ttl -= timeDelta;
+    if (this.ttl < 0) {
         this.ttl += maxttl;
-      }
+        this.speed *= -1;
     }
   }
 }
