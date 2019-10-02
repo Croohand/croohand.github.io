@@ -19,7 +19,7 @@ void setup() {
 }
 
 void draw() {
-  timeDelta = .016666667;
+  timeDelta = 1. / 60;
   if (opacity < 95) {
       fill(0, 0, 0, opacity);
       rect(0, 0, width, height);

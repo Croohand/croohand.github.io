@@ -83,7 +83,7 @@ class SpawnCluster {
 
   float calcTtl() {
     float neededTtl = 1 / this.calcSpeed() / 8.;
-    float cycles = round(4. / neededTtl);
+    float cycles = min(20, round(4. / neededTtl));
     if (cycles < 0.1) {
         cycles = 1.;
     }
