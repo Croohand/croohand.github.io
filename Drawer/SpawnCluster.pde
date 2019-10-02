@@ -82,12 +82,13 @@ class SpawnCluster {
   }
 
   float calcTtl() {
-    float neededTtl = 1 / this.calcSpeed() / 8;
-    float res = 4;
-    while (res > neededTtl) {
-        res /= 2f;
+    float neededTtl = 1 / this.calcSpeed() / 8.;
+    float cycles = round(4. / neededTtl);
+    if (cycles < 0.1) {
+        cycles = 1.;
     }
-    return res;
+    float ttl = 4. / cycles;
+    return ttl;
   }
 
   PVector getLastPos() {
