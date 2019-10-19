@@ -38,7 +38,7 @@ class SpawnCluster {
   }
 
   void update() {
-    this.hue += timeDelta * 32;
+    this.hue += timeDelta * 64;
     if (this.hue >= 256) {
       this.hue -= 256;
     }
@@ -83,11 +83,11 @@ class SpawnCluster {
 
   float calcTtl() {
     float neededTtl = 1 / this.calcSpeed() / 8.;
-    float cycles = min(20, round(4. / neededTtl));
+    float cycles = min(20, round(2. / neededTtl));
     if (cycles < 0.1) {
         cycles = 1.;
     }
-    float ttl = 4. / cycles;
+    float ttl = 2. / cycles;
     return ttl;
   }
 

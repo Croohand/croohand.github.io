@@ -95,8 +95,8 @@
                 if (capturing) {
                     capturer.capture(canvas);
                     capturedFrames++;
-                    updateRecordButton('Capturing', capturedFrames / 480);
-                    if (capturedFrames === 480) {
+                    updateRecordButton('Capturing', capturedFrames / 240);
+                    if (capturedFrames === 240) {
                         stopRecord();
                         saveRecord();
                     }
