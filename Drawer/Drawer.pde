@@ -51,6 +51,8 @@ void draw() {
       txt = "draw: diag";
     } else if (mode == 3) {
       txt = "draw: quad";
+    } else if (mode == 4) {
+      txt = "draw: duo diag";
     } else {
       txt = "draw: simple";
     }
@@ -127,7 +129,7 @@ void keyPressed() {
     }
   }
   if (key == 'z') {
-    mode = (mode + 1) % 5;
+    mode = (mode + 1) % 6;
   }
   if (key == 'x') {
     moveMode = (moveMode + 1) % 3;

@@ -32,8 +32,12 @@ class SpawnCluster {
     if (mode == 1 || mode == 3) {
       spawns.add(new Spawn(new PVector(px, 2 * centery - py)));
     }
-    if (mode == 2 || mode == 3) {
+    if (mode == 2 || mode == 3 || mode == 4) {
       spawns.add(new Spawn(new PVector(2 * centerx - px, 2 * centery - py)));
+    }
+    if (mode == 4) {
+      spawns.add(new Spawn(new PVector(centerx - py + centery, centery + px - centerx)));
+      spawns.add(new Spawn(new PVector(centerx - centery + py, centerx + centery - px)));
     }
   }
 
