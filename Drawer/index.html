@@ -12,9 +12,17 @@
     </head>
 
     <body>
-        <canvas id='sketch' data-processing-sources='Drawer.pde Spawn.pde SpawnCluster.pde Particle.pde'></canvas>
+        <canvas id='sketch' data-processing-sources='Drawer.pde Spawn.pde SpawnCluster.pde Particle.pde'></canvas> <br>
         <button id='recordButton' onclick='startRecord();'>Record GIF</button>
         <button onclick='showHotkeys();'>Hotkeys</button>
+        <br><br>
+        <form type='submit'>
+            Canvas width:
+            <input type='number' name='width'> <br>
+            Canvas height:
+            <input type='number' name='height'> <br>
+            <input type='submit' value='Reload'>
+        </form>
         <script type='application/javascript'>
             var processingInstance;
             var capturer;

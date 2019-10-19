@@ -14,7 +14,17 @@ int update = 1;
 
 void setup() {
   prevTime = millis();
-  size(900, 600);
+
+  var canvasWidth = new URLSearchParams(window.location.search).get('width');
+  var canvasHeight = new URLSearchParams(window.location.search).get('height');
+  if (canvasWidth === null) {
+      canvasWidth = 500;
+  }
+  if (canvasHeight === null) {
+      canvasHeight = 500;
+  }
+
+  size(canvasWidth, canvasHeight);
   colorMode(HSB, 256, 256, 256, 100);
 }
 
