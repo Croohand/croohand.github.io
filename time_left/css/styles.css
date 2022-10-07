@@ -1,0 +1,21 @@
+* {
+    font-size: 50pt;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color: white;
+}
+
+body {
+    background-color: black;
+}
+
+#time_div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
