@@ -31,10 +31,10 @@ function periodic(t) {
 }
 
 function Background() {
-    this.border = height / 2;
+    this.border = height;
 
     this.draw = function(p) {
-        let coeff = 25;
+        let coeff = 50;
         this.dots = [];
         for (let i = 0; i < this.border + this.border / coeff; i += this.border / coeff) {
             let dy = this.border / coeff / 2;
@@ -103,7 +103,7 @@ function Building(z) {
     this.t = int(random(3));
     this.w = W[this.t] * (1 - pow(this.z * 0.4, 2)) * 1.5;
     this.h = H[this.t] * (1 - pow(this.z * 0.4, 2)) * 2;
-    this.x = random(-width, width * 2);
+    this.x = random(-width - 150, width * 2 + 150);
     this.x0 = this.x;
     this.y = height - this.h / 2 - this.z * height / 5;
 
