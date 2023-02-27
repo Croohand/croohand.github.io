@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>City</title>
+        <script src='../common/CCapture.js'></script>
+        <script src='../common/webm-writer-0.2.0.js'></script>
+        <script src='../common/download.js'></script>
+        <script src='../common/gif.js'></script>
+        <script src='../common/tar.js'></script>
+        <script src='../common/Whammy.js'></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+
+    <body>
+        <button id='recordButton' onclick='startRecord();'>Record GIF</button>
+        <script type='application/javascript'>
+            const FRAMES = 600;
+
+            var capturer;
+            var capturing = false;
+            var capturedFrames;
+            var recordButton;
+
+            window.onload = function() {
+                recordButton = document.getElementById('recordButton')
+            }
+
+            function updateRecordButton(action, progress) {
+                recordButton.innerText = `${action}... ${(progress*100).toFixed(2)}%`;
+            }
+
+            function startRecord() {
+                if (capturing) {
+                    return;
+                }
+                capturedFrames = 0;
+                capturer = new CCapture({
+                    framerate: 60,
+                    format: 'gif',
+                    workersPath: '../common/',
+                    onProgress: function(progress) {
+                        updateRecordButton('Processing', progress);
+                    }
+                });
+                capturer.start();
+                capturing = true;
+                recordButton.disabled = true;
+                updateRecordButton('Capturing', 0);
+            }
+
+            function stopRecord() {
+                if (!capturing) {
+                    return;
+                }
+                capturer.stop();
+            }
+
+            function saveRecord() {
+                if (!capturer) {
+                    return;
+                }
+                capturing = false;
+                capturer.save(function (blob) {
+                    recordButton.disabled = false;
+                    recordButton.innerText = 'Record GIF';
+                });
+            }
+
+            function capture() {
+                if (capturing) {
+                    capturer.capture(document.getElementById('defaultCanvas0'));
+                    capturedFrames++;
+                    updateRecordButton('Capturing', capturedFrames / FRAMES);
+                    if (capturedFrames === FRAMES) {
+                        stopRecord();
+                        saveRecord();
+                    }
+                }
+            }
+        </script>
+        <script src="city.js"></script>
+    </body>
+</html>
