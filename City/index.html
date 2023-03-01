@@ -16,6 +16,7 @@
 
     <body>
         <button id='recordButton' onclick='startRecord();'>Record GIF</button>
+        <button id='formatButton' onclick='format ^= 1; resetRecordButton();'>Change format</button>
         <script type='application/javascript'>
             const FRAMES = 600;
 
@@ -23,9 +24,12 @@
             var capturing = false;
             var capturedFrames;
             var recordButton;
+            var formatButton;
+            var format = 0;
 
             window.onload = function() {
-                recordButton = document.getElementById('recordButton')
+                recordButton = document.getElementById('recordButton');
+                formatButton = document.getElementById('formatButton');
             }
 
             function updateRecordButton(action, progress) {
@@ -38,8 +42,8 @@
                 }
                 capturedFrames = 0;
                 capturer = new CCapture({
-                    framerate: 60,
-                    format: 'gif',
+                    framerate: 30,
+                    format: (format ? 'png' : 'gif'),
                     workersPath: '../common/',
                     onProgress: function(progress) {
                         updateRecordButton('Processing', progress);
@@ -58,6 +62,12 @@
                 capturer.stop();
             }
 
+            function resetRecordButton() {
+                if (!capturing) {
+                    recordButton.innerText = format ? 'Record PNG (as .tar)' : 'Record GIF';
+                }
+            }
+
             function saveRecord() {
                 if (!capturer) {
                     return;
@@ -65,7 +75,7 @@
                 capturing = false;
                 capturer.save(function (blob) {
                     recordButton.disabled = false;
-                    recordButton.innerText = 'Record GIF';
+                    resetRecordButton();
                 });
             }
 
