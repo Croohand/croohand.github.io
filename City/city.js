@@ -1,9 +1,9 @@
-let BUILDINGS = 50;
+let BUILDINGS = 80;
 let buildings = [];
 let back = null;
 
 function setup() {
-    createCanvas(512, 512);
+    createCanvas(800, 512);
     pixelDensity(1);
 
     back = new Background();
@@ -32,59 +32,74 @@ function periodic(t) {
 
 function Background() {
     this.border = height;
+    this.coeff = 64;
+    this.dots = [];
+    for (let i = 0; i < this.border + this.border / this.coeff; i += this.border / this.coeff) {
+        let dy = this.border / this.coeff / 2;
+        let dx = width / 10;
+        let x1 = width / 3 + dx * negNoise(i * 100);
+        let x2 = width / 3 * 2 + dx * negNoise(i * 100);
+        let shape = [];
+        shape.push([0, i + dy * negNoise(i * 100)]);
+        shape.push(shape[0]);
+        shape.push([x1, i + dy * negNoise(i * 100 + x1 / width)]);
+        shape.push([x2, i + dy * negNoise(i * 100 + x2 / width)]);
+        shape.push([width, i + dy * negNoise(i * 100 + 1)]);
+        shape.push(shape[shape.length - 1]);
+        this.dots.push(shape);
+    }
 
     this.draw = function(p) {
-        let coeff = 50;
-        this.dots = [];
-        for (let i = 0; i < this.border + this.border / coeff; i += this.border / coeff) {
-            let dy = this.border / coeff / 2;
-            let dx = width / 10;
-            let x1 = width / 3 + dx * negNoise(i * 100 + p);
-            let x2 = width / 3 * 2 + dx * negNoise(i * 100 + p);
-            let shape = [];
-            shape.push([0, i + dy * negNoise(i * 100 + p)]);
-            shape.push(shape[0]);
-            shape.push([x1, i + dy * negNoise(i * 100 + x1 / width + p)]);
-            shape.push([x2, i + dy * negNoise(i * 100 + x2 / width + p)]);
-            shape.push([width, i + dy * negNoise(i * 100 + 1 + p)]);
-            shape.push(shape[shape.length - 1]);
-            this.dots.push(shape);
-        }
-
         rectMode(CORNER);
         fill(0);
         noStroke();
         rect(0, 0, width, height);
         let startColor = color(4, 4, 84);
         let endColor = color(231, 84, 66);
-        for (let i = 0; i < this.border; i += this.border / coeff) {
+        for (let i = 0; i < this.border; i += this.border / this.coeff) {
             noStroke();
             fill(lerpColor(startColor, endColor, i / this.border));
-            rect(0, i, width, this.border / coeff);
+            rectr(0, i, width, this.border / this.coeff);
         }
-        for (let i = 0, cnt = 0; i < this.border + this.border / coeff; i += this.border / coeff, cnt++) {
-            strokeWeight(this.border / coeff);
-            stroke(lerpColor(startColor, endColor, i / this.border));
-            noFill();
-            beginShape();
-            for (let j = 0; j < this.dots[cnt].length; ++j) {
-                curveVertex(this.dots[cnt][j][0], this.dots[cnt][j][1]);
-            }
-            endShape();
-        }
+        // for (let i = 0, cnt = 0; i < this.border + this.border / this.coeff; i += this.border / this.coeff, cnt++) {
+        //     strokeWeight(intr(this.border / this.coeff));
+        //     stroke(lerpColor(startColor, endColor, i / this.border));
+        //     noFill();
+        //     beginShape();
+        //     for (let j = 0; j < this.dots[cnt].length; ++j) {
+        //         curveVertex(intr(this.dots[cnt][j][0]), intr(this.dots[cnt][j][1]));
+        //     }
+        //     endShape();
+        // }
     }
+}
+
+function intr(x) {
+  return int(round(x) + 0.1);
+}
+
+function quadr(x1, y1, x2, y2, x3, y3, x4, y4) {
+  quad(intr(x1), intr(y1), intr(x2), intr(y2), intr(x3), intr(y3), intr(x4), intr(y4));
+}
+
+function rectr(x1, y1, x2, y2) {
+  rect(intr(x1), intr(y1), intr(x2), intr(y2));
+}
+
+function ellipser(x1, y1, x2, y2) {
+  ellipse(intr(x1), intr(y1), intr(x2), intr(y2));
 }
 
 function upRightQuad(x, y, w, h, angle) {
     let x1 = x + cos(angle) * h;
     let y1 = y - sin(angle) * h / 3.33333333;
-    quad(x, y, x1, y1, x1 + w, y1, x + w, y);
+    quadr(x, y, x1, y1, x1 + w, y1, x + w, y);
 }
 
 function downRightQuad(x, y, w, h, angle) {
     let x1 = x + cos(angle) * w;
     let y1 = y - sin(angle) * w / 3.33333333;
-    quad(x, y, x1, y1, x1, y1 + h, x, y1 + h);
+    quadr(x, y, x1, y1, x1, y1 + h, x, y1 + h);
 }
 
 function drawLights(x, y, w, h, angle) {
@@ -92,10 +107,10 @@ function drawLights(x, y, w, h, angle) {
     let y1 = y - sin(angle) * h / 3.33333333;
     fill(230, 50, 50);
     ellipseMode(CENTER);
-    ellipse(x + 1, y, 4, 4);
-    ellipse(x + w - 1, y, 4, 4);
-    ellipse(x1 + 1, y1, 4, 4);
-    ellipse(x1 + w - 1, y1, 4, 4);
+    ellipser(x + 1, y, 4, 4);
+    ellipser(x + w - 1, y, 4, 4);
+    ellipser(x1 + 1, y1, 4, 4);
+    ellipser(x1 + w - 1, y1, 4, 4);
 }
 
 function Building(z) {
@@ -115,7 +130,7 @@ function Building(z) {
         rectMode(CORNER);
         noStroke();
         fill(lerpColor(color(0), color(30), this.z));
-        rect(this.x, this.y, this.w, this.h);
+        rectr(this.x, this.y, this.w, this.h);
         upRightQuad(this.x, this.y + 1, this.w, this.w / 1.5, PI / 2.5);
         downRightQuad(this.x + this.w - 1, this.y, this.w / 1.5, this.h, PI / 2.5);
         drawLights(this.x, this.y, this.w, this.w / 1.5, PI / 2.5);
@@ -126,9 +141,9 @@ function Building(z) {
                 if (noise((this.x0 + dx) * 0.1, (this.y + dy) * 0.1) < 0.5) {
                     continue;
                 }
-                fill(242 - z * 30, 224 - z * 30, 106 - z * 30);
+                fill(242 - this.z * 30, 224 - this.z * 30, 106 - this.z * 30);
                 noStroke();
-                rect(this.x + dx, this.y + dy, szx, szy);
+                rectr(this.x + dx, this.y + dy, szx, szy);
             }
         }
         szx = szx / 1.5 * cos(PI / 2.5);
@@ -137,7 +152,7 @@ function Building(z) {
                 if (noise(1000 + (this.x0 + dx * 2) * 0.1, (this.y + dy * 2) * 0.1) < 0.5) {
                     continue;
                 }
-                fill(242 - z * 30, 224 - z * 30, 106 - z * 30);
+                fill(242 - this.z * 30, 224 - this.z * 30, 106 - this.z * 30);
                 noStroke();
                 downRightQuad(this.x + this.w + dx, this.y + dy - cnt * 5 * sin(PI / 2.5), 5, 10, PI / 2.5);
             }
