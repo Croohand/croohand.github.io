@@ -1,4 +1,4 @@
-let BUILDINGS = 80;
+let BUILDINGS = 40;
 let buildings = [];
 let back = null;
 
@@ -22,7 +22,7 @@ let W = [45, 65, 90, 115];
 let H = [150, 220, 285, 360]
 
 function negNoise(x, y = 0) {
-    let SCALE = 3;
+    let SCALE = 2;
     return 2 * noise(x * SCALE, y * SCALE) - 1
 }
 
@@ -32,45 +32,45 @@ function periodic(t) {
 
 function Background() {
     this.border = height;
-    this.coeff = 64;
-    this.dots = [];
-    for (let i = 0; i < this.border + this.border / this.coeff; i += this.border / this.coeff) {
-        let dy = this.border / this.coeff / 2;
-        let dx = width / 10;
-        let x1 = width / 3 + dx * negNoise(i * 100);
-        let x2 = width / 3 * 2 + dx * negNoise(i * 100);
-        let shape = [];
-        shape.push([0, i + dy * negNoise(i * 100)]);
-        shape.push(shape[0]);
-        shape.push([x1, i + dy * negNoise(i * 100 + x1 / width)]);
-        shape.push([x2, i + dy * negNoise(i * 100 + x2 / width)]);
-        shape.push([width, i + dy * negNoise(i * 100 + 1)]);
-        shape.push(shape[shape.length - 1]);
-        this.dots.push(shape);
-    }
 
     this.draw = function(p) {
+        this.coeff = 8;
+        this.dots = [];
+        for (let i = 0; i < this.border + this.border / this.coeff; i += this.border / this.coeff) {
+            let dy = this.border / this.coeff / 2;
+            let dx = width / 10;
+            let x1 = width / 3 + dx * negNoise(i * 100 + p);
+            let x2 = width / 3 * 2 + dx * negNoise(i * 100 + p);
+            let shape = [];
+            shape.push([0, i + dy * negNoise(i * 100 + p)]);
+            shape.push(shape[0]);
+            shape.push([x1, i + dy * negNoise(i * 100 + x1 / width + p)]);
+            shape.push([x2, i + dy * negNoise(i * 100 + x2 / width + p)]);
+            shape.push([width, i + dy * negNoise(i * 100 + 1 + p)]);
+            shape.push(shape[shape.length - 1]);
+            this.dots.push(shape);
+        }
         rectMode(CORNER);
         fill(0);
         noStroke();
         rect(0, 0, width, height);
-        let startColor = color(4, 4, 84);
-        let endColor = color(231, 84, 66);
+        let startColor = color(15, 8, 82);
+        let endColor = color(220, 80, 68);
         for (let i = 0; i < this.border; i += this.border / this.coeff) {
             noStroke();
             fill(lerpColor(startColor, endColor, i / this.border));
             rectr(0, i, width, this.border / this.coeff);
         }
-        // for (let i = 0, cnt = 0; i < this.border + this.border / this.coeff; i += this.border / this.coeff, cnt++) {
-        //     strokeWeight(intr(this.border / this.coeff));
-        //     stroke(lerpColor(startColor, endColor, i / this.border));
-        //     noFill();
-        //     beginShape();
-        //     for (let j = 0; j < this.dots[cnt].length; ++j) {
-        //         curveVertex(intr(this.dots[cnt][j][0]), intr(this.dots[cnt][j][1]));
-        //     }
-        //     endShape();
-        // }
+        for (let i = 0, cnt = 0; i < this.border + this.border / this.coeff; i += this.border / this.coeff, cnt++) {
+            strokeWeight(intr(this.border / this.coeff));
+            stroke(lerpColor(startColor, endColor, i / this.border));
+            noFill();
+            beginShape();
+            for (let j = 0; j < this.dots[cnt].length; ++j) {
+                curveVertex(intr(this.dots[cnt][j][0]), intr(this.dots[cnt][j][1]));
+            }
+            endShape();
+        }
     }
 }
 
