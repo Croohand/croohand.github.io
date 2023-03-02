@@ -1,4 +1,4 @@
-const BUILDINGS = 45;
+const BUILDINGS = 60;
 var buildings = [];
 var back = null;
 
@@ -159,7 +159,7 @@ function Building(z) {
     this.z = z;
     this.t = int(random(3));
     this.w = W[this.t] * (1 - pow(this.z * 0.75, 2)) * 1.5;
-    this.h = H[this.t] * (1 - pow(this.z * 0.4, 2)) * 2;
+    this.h = H[this.t] * (1 - pow(this.z * 0.6, 2)) * 3;
     this.x = generationX;
     generationX += (3 * width) / BUILDINGS * random(1, 3);
     if (generationX >= 2 * width) {
@@ -169,7 +169,7 @@ function Building(z) {
         this.x -= 3 * width;
     }
     this.x0 = this.x;
-    this.y = height - this.h / 2 - this.z * height / 5;
+    this.y = height - this.h / 3 - this.z * height / 5;
 
     this.draw = function(t) {
         let spd = t * 3;
@@ -210,21 +210,21 @@ function Building(z) {
                 rectr(this.x + dx, this.y + dy, szx, szy);
             }
         }
-        let nszx = szx / 1.5 * cos(PI / 2.5);
-        for (let dx = nszx * 5, cnt = 0; dx < this.w * cos(PI / 2.5) / 1.5 - nszx * 5; dx += nszx * 5, cnt++) {
-            for (let dy = szy; dy < this.h - szy; dy += szy * 2) {
-                if (noise(1000 + (this.x0 + dx * 2) * 0.1, (this.y + dy * 2) * 0.1) < 0.5) {
-                    continue;
-                }
-                fill(242 - this.z * 30, 224 - this.z * 30, 106 - this.z * 30);
-                noStroke();
+        // let nszx = szx / 1.5 * cos(PI / 2.5);
+        // for (let dx = nszx * 5, cnt = 0; dx < this.w * cos(PI / 2.5) / 1.5 - nszx * 5; dx += nszx * 5, cnt++) {
+        //     for (let dy = szy; dy < this.h - szy; dy += szy * 2) {
+        //         if (noise(1000 + (this.x0 + dx * 2) * 0.1, (this.y + dy * 2) * 0.1) < 0.5) {
+        //             continue;
+        //         }
+        //         fill(242 - this.z * 30, 224 - this.z * 30, 106 - this.z * 30);
+        //         noStroke();
                 // downRightQuad(this.x + this.w + dx, this.y + dy - cnt * 5 * sin(PI / 2.5), szx, szy, PI / 2.5);
-            }
-        }
+        //     }
+        // }
     }
 
     this.resetX = function(count) {
-        generationX += (3 * width) / count * random(1, 1.8);
+        generationX += (3 * width) / count * random(1, 2);
         if (generationX >= 2 * width) {
             return false;
         }
