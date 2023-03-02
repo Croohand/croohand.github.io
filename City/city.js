@@ -1,6 +1,8 @@
-let BUILDINGS = 40;
-let buildings = [];
-let back = null;
+const BUILDINGS = 35;
+var buildings = [];
+var back = null;
+
+var generationX = -100;
 
 function setup() {
     createCanvas(800, 512);
@@ -8,18 +10,15 @@ function setup() {
 
     back = new Background();
 
-    let depths = [];
     for (let i = 0; i < BUILDINGS; ++i) {
-        depths.push(random());
+        buildings.push(new Building(random()));
     }
-    depths = depths.sort().reverse();
-    for (let i = 0; i < BUILDINGS; ++i) {
-        buildings.push(new Building(depths[i]));
-    }
+
+    buildings = buildings.sort((a, b) => (a.z < b.z) ? 1 : -1);
 }
 
-let W = [45, 65, 90, 115];
-let H = [150, 220, 285, 360]
+const W = [45, 65, 90, 115];
+const H = [150, 220, 285, 360]
 
 function negNoise(x, y = 0) {
     let SCALE = 2;
@@ -116,15 +115,29 @@ function drawLights(x, y, w, h, angle) {
 function Building(z) {
     this.z = z;
     this.t = int(random(3));
-    this.w = W[this.t] * (1 - pow(this.z * 0.4, 2)) * 1.5;
+    this.w = W[this.t] * (1 - pow(this.z * 0.75, 2)) * 1.5;
     this.h = H[this.t] * (1 - pow(this.z * 0.4, 2)) * 2;
-    this.x = random(-width - 150, width * 2 + 150);
+    this.x = generationX;
+    generationX += (2.5 * width) / BUILDINGS * random(1, 3);
+    if (generationX >= 2 * width) {
+      generationX -= 3 * width;
+    }
+    if (this.x >= 2 * width) {
+      this.x -= 3 * width;
+    }
     this.x0 = this.x;
     this.y = height - this.h / 2 - this.z * height / 5;
 
     this.draw = function(t) {
-        this.x = this.x0 - t * width * 3;
-        if (this.x < -width) {
+        let spd = t * 3;
+        if (this.z > 0.5) {
+          spd = t * 2;
+        }
+        if (this.z > 0.8) {
+          spd = t;
+        }
+        this.x = this.x0 - spd * width * 3;
+        while (this.x < -width) {
             this.x += 3 * width;
         }
         rectMode(CORNER);
@@ -136,6 +149,14 @@ function Building(z) {
         drawLights(this.x, this.y, this.w, this.w / 1.5, PI / 2.5);
         let szx = 5;
         let szy = 10;
+        if (this.z > 0.5) {
+          szx = 4;
+          szy = 8;
+        }
+        if (this.z > 0.8) {
+          szx = 3;
+          szy = 5;
+        }
         for (let dx = szx * 2; dx < this.w - szx * 2; dx += szx * 2) {
             for (let dy = szy * 2; dy < this.h - szy * 2; dy += szy * 2) {
                 if (noise((this.x0 + dx) * 0.1, (this.y + dy) * 0.1) < 0.5) {
@@ -146,15 +167,15 @@ function Building(z) {
                 rectr(this.x + dx, this.y + dy, szx, szy);
             }
         }
-        szx = szx / 1.5 * cos(PI / 2.5);
-        for (let dx = szx * 5, cnt = 0; dx < this.w * cos(PI / 2.5) / 1.5 - szx * 5; dx += szx * 5, cnt++) {
+        let nszx = szx / 1.5 * cos(PI / 2.5);
+        for (let dx = nszx * 5, cnt = 0; dx < this.w * cos(PI / 2.5) / 1.5 - nszx * 5; dx += nszx * 5, cnt++) {
             for (let dy = szy; dy < this.h - szy; dy += szy * 2) {
                 if (noise(1000 + (this.x0 + dx * 2) * 0.1, (this.y + dy * 2) * 0.1) < 0.5) {
                     continue;
                 }
                 fill(242 - this.z * 30, 224 - this.z * 30, 106 - this.z * 30);
                 noStroke();
-                downRightQuad(this.x + this.w + dx, this.y + dy - cnt * 5 * sin(PI / 2.5), 5, 10, PI / 2.5);
+                // downRightQuad(this.x + this.w + dx, this.y + dy - cnt * 5 * sin(PI / 2.5), szx, szy, PI / 2.5);
             }
         }
     }
