@@ -1,4 +1,4 @@
-const BUILDINGS = 35;
+const BUILDINGS = 45;
 var buildings = [];
 var back = null;
 
@@ -14,7 +14,50 @@ function setup() {
         buildings.push(new Building(random()));
     }
 
-    buildings = buildings.sort((a, b) => (a.z < b.z) ? 1 : -1);
+    let cnt = 0;
+    generationX = -width;
+    for (let building of buildings) {
+        if (building.z < 0.5) {
+            cnt += 1;
+        }
+    }
+    let newbuilds = [];
+    for (let building of buildings) {
+        if (building.z < 0.5) {
+            if (building.resetX(cnt)) {
+                newbuilds.push(building);
+            }
+        }
+    }
+    cnt = 0;
+    generationX = -width;
+    for (let building of buildings) {
+        if (building.z < 0.8 && building.z >= 0.5) {
+            cnt += 1;
+        }
+    }
+    for (let building of buildings) {
+        if (building.z < 0.8 && building.z >= 0.5) {
+            if (building.resetX(cnt)) {
+                newbuilds.push(building);
+            }
+        }
+    }
+    cnt = 0;
+    generationX = -width;
+    for (let building of buildings) {
+        if (building.z >= 0.8) {
+            cnt += 1;
+        }
+    }
+    for (let building of buildings) {
+        if (building.z >= 0.8) {
+            if (building.resetX(cnt)) {
+                newbuilds.push(building);
+            }
+        }
+    }
+    buildings = newbuilds.sort((a, b) => (a.z < b.z) ? 1 : -1);
 }
 
 const W = [45, 65, 90, 115];
@@ -74,19 +117,19 @@ function Background() {
 }
 
 function intr(x) {
-  return int(round(x) + 0.1);
+    return int(round(x) + 0.1);
 }
 
 function quadr(x1, y1, x2, y2, x3, y3, x4, y4) {
-  quad(intr(x1), intr(y1), intr(x2), intr(y2), intr(x3), intr(y3), intr(x4), intr(y4));
+    quad(intr(x1), intr(y1), intr(x2), intr(y2), intr(x3), intr(y3), intr(x4), intr(y4));
 }
 
 function rectr(x1, y1, x2, y2) {
-  rect(intr(x1), intr(y1), intr(x2), intr(y2));
+    rect(intr(x1), intr(y1), intr(x2), intr(y2));
 }
 
 function ellipser(x1, y1, x2, y2) {
-  ellipse(intr(x1), intr(y1), intr(x2), intr(y2));
+    ellipse(intr(x1), intr(y1), intr(x2), intr(y2));
 }
 
 function upRightQuad(x, y, w, h, angle) {
@@ -118,12 +161,12 @@ function Building(z) {
     this.w = W[this.t] * (1 - pow(this.z * 0.75, 2)) * 1.5;
     this.h = H[this.t] * (1 - pow(this.z * 0.4, 2)) * 2;
     this.x = generationX;
-    generationX += (2.5 * width) / BUILDINGS * random(1, 3);
+    generationX += (3 * width) / BUILDINGS * random(1, 3);
     if (generationX >= 2 * width) {
-      generationX -= 3 * width;
+        generationX -= 3 * width;
     }
     if (this.x >= 2 * width) {
-      this.x -= 3 * width;
+        this.x -= 3 * width;
     }
     this.x0 = this.x;
     this.y = height - this.h / 2 - this.z * height / 5;
@@ -131,10 +174,10 @@ function Building(z) {
     this.draw = function(t) {
         let spd = t * 3;
         if (this.z > 0.5) {
-          spd = t * 2;
+            spd = t * 2;
         }
         if (this.z > 0.8) {
-          spd = t;
+            spd = t;
         }
         this.x = this.x0 - spd * width * 3;
         while (this.x < -width) {
@@ -150,12 +193,12 @@ function Building(z) {
         let szx = 5;
         let szy = 10;
         if (this.z > 0.5) {
-          szx = 4;
-          szy = 8;
+            szx = 4;
+            szy = 8;
         }
         if (this.z > 0.8) {
-          szx = 3;
-          szy = 5;
+            szx = 3;
+            szy = 5;
         }
         for (let dx = szx * 2; dx < this.w - szx * 2; dx += szx * 2) {
             for (let dy = szy * 2; dy < this.h - szy * 2; dy += szy * 2) {
@@ -179,13 +222,23 @@ function Building(z) {
             }
         }
     }
+
+    this.resetX = function(count) {
+        generationX += (3 * width) / count * random(1, 1.8);
+        if (generationX >= 2 * width) {
+            return false;
+        }
+        this.x = generationX;
+        this.x0 = this.x;
+        return true;
+    }
 }
 
 function draw() {
     capture();
     let t = frameCount % FRAMES / FRAMES;
     back.draw(periodic(t));
-    for (let i = 0; i < BUILDINGS; ++i) {
+    for (let i = 0; i < buildings.length; ++i) {
         buildings[i].draw(t);
     }
 }
